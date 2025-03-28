@@ -1,0 +1,3 @@
+[submodule "pyssem"]
+	path = pyssem
+	url = https://github.com/mchartigan.pyssem
