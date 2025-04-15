@@ -1,8 +1,8 @@
 {
     "scenario_properties": {
         "start_date": "01/01/2000",
-        "simulation_duration": 50,
-        "steps": 30,
+        "simulation_duration": 100,
+        "steps": 100,
         "min_altitude": 200,
         "max_altitude": 1400,
         "n_shells": 20,
