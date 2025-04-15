@@ -1,11 +1,12 @@
 from pyssem.pyssem import Model
 from pyssem.pyssem.utils.plotting.plotting import Plots
 import json
+import numpy
 import pickle
 import os
 
 # Load simulation configuration
-with open('pyssem/pyssem/simulation_configurations/example_sim.json') as f:
+with open('simple_sim.json') as f:
     simulation_data = json.load(f)
 
 scenario_props = simulation_data['scenario_properties']
@@ -29,10 +30,11 @@ model = Model(
 )
 
 
+
 # Run the model
 species = simulation_data["species"]
 species_list = model.configure_species(species)
-results = model.run_model()
+model.run_model()
 
 # Load previous runs
 # with open('out/example_sim/scenario-properties-baseline.pkl', 'rb') as file:
