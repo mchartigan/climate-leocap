@@ -49,12 +49,14 @@ def extract_species_data(scenario_props, prefix):
     Extract data for a specific type of species from scenario properties.
     """
     # Get indices of species with the given prefix
+
     if prefix == 'debris':
         species_indices = [i for i, name in enumerate(scenario_props.species_names)
-                          if not (name.startswith('S_') or name.startswith('D_') or
-                                 name == 'S' or name == 'D')]
+                          if (name.startswith('N') or name.startswith('N_') or
+                                 name == 'N')]
+                           #if (name.startswith('N_500'))]
     else:
-        patterns = [f"{prefix}_", prefix] if prefix in ['S', 'D'] else [prefix]
+        patterns = [f"{prefix}_", prefix] if prefix in ['S', 'B'] else [prefix]
         species_indices = [i for i, name in enumerate(scenario_props.species_names)
                           if any(name.startswith(pattern) for pattern in patterns)]
 
@@ -128,7 +130,7 @@ def plot_and_return_atmospheric_density(scenario_props, timestamps, dates, outpu
     time_mesh, altitude_mesh, density_mesh = calculate_time_dependent_density(scenario_props)
 
     # Create figure
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(14, 8))
 
     # Create the heatmap
     from matplotlib.colors import LogNorm
@@ -180,15 +182,15 @@ def plot_species_heatmap(scenario_props, species_data, timestamps, dates, specie
     Create a heatmap of species data with optional atmospheric density contours.
     """
     # Set colormap and label based on species type
-    cmap_dict = {'S': 'Blues', 'D': 'Reds', 'debris': 'Greens'}
+    cmap_dict = {'S': 'Blues', 'B': 'Reds', 'debris': 'Greens'}
     label_dict = {
         'S': 'Number of Active Satellites', 
-        'D': 'Number of Derelict Satellites', 
+        'B': 'Number of Rocket Bodies',
         'debris': 'Number of Debris Objects'
     }
     title_dict = {
         'S': 'Active Satellite Population Heatmap',
-        'D': 'Derelict Satellite Population Heatmap',
+        'B': 'Rocket Body Population Heatmap',
         'debris': 'Debris Population Heatmap'
     }
     
@@ -206,6 +208,25 @@ def plot_species_heatmap(scenario_props, species_data, timestamps, dates, specie
     # Sum all objects of this type
     for species_data_array in species_data.values():
         total_objects += species_data_array
+
+    """
+    # Initialize an array to hold total objects per shell over time
+    total_objects = np.zeros((n_shells, n_times))
+
+    # Recursive function to process potentially nested dictionaries
+    def add_array_data(data_item):
+        nonlocal total_objects
+        if isinstance(data_item, np.ndarray) and data_item.shape == (n_shells, n_times):
+            # If it's an array with the right shape, add it to the total
+            total_objects += data_item
+        elif isinstance(data_item, dict):
+            # If it's a dictionary, process each value recursively
+            for value in data_item.values():
+                add_array_data(value)
+
+    # Start the recursive processing
+    add_array_data(species_data)
+    """
 
     # Create the heatmap
     plt.figure(figsize=(14, 8))
@@ -268,7 +289,7 @@ def plot_species_heatmap(scenario_props, species_data, timestamps, dates, specie
     filename_suffix = "_with_contours" if density_data is not None else ""
     file_prefix = {
         'S': 'active_satellites',
-        'D': 'derelict_satellites',
+        'B': 'rocket_body_satellites',
         'debris': 'debris'
     }.get(species_type, 'objects')
     
@@ -296,7 +317,7 @@ def main():
     # Extract satellite and debris data using the unified function
     # The function returns (indices, names, data), but we only need the data dictionaries
     _, _, active_satellite_data = extract_species_data(scenario_props, 'S')
-    _, _, derelict_satellite_data = extract_species_data(scenario_props, 'D')
+    _, _, rocket_body_satellites = extract_species_data(scenario_props, 'B')
     _, _, debris_data = extract_species_data(scenario_props, 'debris')
 
     # Calculate atmospheric density once and plot the heatmap
@@ -304,13 +325,13 @@ def main():
 
     # Create basic heatmaps without contours
     plot_species_heatmap(scenario_props, active_satellite_data, timestamps, date_array, 'S', output_dir)
-    plot_species_heatmap(scenario_props, derelict_satellite_data, timestamps, date_array, 'D', output_dir)
+    plot_species_heatmap(scenario_props, rocket_body_satellites, timestamps, date_array, 'B', output_dir)
     plot_species_heatmap(scenario_props, debris_data, timestamps, date_array, 'debris', output_dir)
 
     # Create heatmaps with contours
     plot_species_heatmap(scenario_props, active_satellite_data, timestamps, date_array, 'S', 
                         output_dir, density_data=density_data, background_alpha=0.4)
-    plot_species_heatmap(scenario_props, derelict_satellite_data, timestamps, date_array, 'D', 
+    plot_species_heatmap(scenario_props, rocket_body_satellites, timestamps, date_array, 'B',
                         output_dir, density_data=density_data, background_alpha=0.4)
     plot_species_heatmap(scenario_props, debris_data, timestamps, date_array, 'debris', 
                         output_dir, density_data=density_data, background_alpha=0.4)
