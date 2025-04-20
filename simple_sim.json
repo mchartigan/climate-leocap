@@ -1,4 +1,7 @@
 {
+    "simulation_name": "SEP Test",
+    "owner": "Neel Puri",
+    "id": "1",
     "scenario_properties": {
         "start_date": "01/01/2000",
         "simulation_duration": 100,
@@ -10,10 +13,23 @@
         "integrator": "BDF",
         "density_model": "JB2008_dens_func",
         "LC": 0.1,
+        "v_imp": 10.0,
         "fragment_spreading": false,
-        "parallel_processing": true,
-        "v_imp": 10.0
+        "baseline": false,
+        "launch_scenario": "SEP1",
+        "indicator_variables": [
+          "active_loss_per_shell",
+          "active_loss_per_shell_percentage",
+          "active_loss_per_species",
+          "active_loss_per_species_percentage"
+        ]
     },
+    "SEP_mapping": [
+      "T.loc[(T['phase'] == 2) & (T['obj_type'] == 2) & (T['maneuverable'] == 1), 'species_class'] = 'S'",
+      "T.loc[(T['phase'] == 2) & (T['maneuverable'] == 0), 'species_class'] = 'Sns'",
+      "T.loc[(T['obj_type'] >= 3), 'species_class'] = 'N'",
+      "T.loc[(T['obj_type'] == 1), 'species_class'] = 'B'"
+    ],
     "plots": [
         "all_plots"
     ],

@@ -24,9 +24,11 @@ model = Model(
     density_model=scenario_props["density_model"],
     LC=scenario_props["LC"],
     v_imp=scenario_props["v_imp"],
-    fragment_spreading=False,
-    parallel_processing=False,
-    baseline=False
+    fragment_spreading=scenario_props["fragment_spreading"],
+    baseline=scenario_props["baseline"],
+    launch_scenario=scenario_props["launch_scenario"],
+    indicator_variables=scenario_props["indicator_variables"],
+    SEP_mapping=simulation_data["SEP_mapping"]
 )
 
 
