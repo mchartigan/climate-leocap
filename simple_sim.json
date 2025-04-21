@@ -3,11 +3,11 @@
     "owner": "Neel Puri",
     "id": "1",
     "scenario_properties": {
-        "start_date": "01/01/2000",
-        "simulation_duration": 100,
+        "start_date": "01/01/2022",
+        "simulation_duration": 78,
         "steps": 100,
-        "min_altitude": 200,
-        "max_altitude": 1400,
+        "min_altitude": 400,
+        "max_altitude": 1000,
         "n_shells": 20,
         "launch_function": "Constant",
         "integrator": "BDF",
@@ -16,7 +16,7 @@
         "v_imp": 10.0,
         "fragment_spreading": false,
         "baseline": false,
-        "launch_scenario": "SEP1",
+        "launch_scenario": "SEP2",
         "indicator_variables": [
           "active_loss_per_shell",
           "active_loss_per_shell_percentage",
@@ -25,10 +25,10 @@
         ]
     },
     "SEP_mapping": [
-      "T.loc[(T['phase'] == 2) & (T['obj_type'] == 2) & (T['maneuverable'] == 1), 'species_class'] = 'S'",
-      "T.loc[(T['phase'] == 2) & (T['maneuverable'] == 0), 'species_class'] = 'Sns'",
-      "T.loc[(T['obj_type'] >= 3), 'species_class'] = 'N'",
-      "T.loc[(T['obj_type'] == 1), 'species_class'] = 'B'"
+        "T.loc[(T['phase'] == 2) & (T['obj_type'] == 2) & (T['maneuverable'] == 1), 'species_class'] = 'S'",
+        "T.loc[(T['obj_type'] == 2) & (T['maneuverable'] == 0), 'species_class'] = 'Sns'",
+        "T.loc[(T['obj_type'] >= 3), 'species_class'] = 'N'",
+        "T.loc[(T['obj_type'] == 1), 'species_class'] = 'B'"
     ],
     "plots": [
         "all_plots"

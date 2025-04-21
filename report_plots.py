@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from datetime import datetime
+from pyssem.pyssem.utils.plotting.plotting import Plots
 
 
 def load_scenario_properties(pkl_file_path):
@@ -301,18 +302,23 @@ def main():
     """
     Main function to run analysis and make plots.
     """
-    # Parse command line arguments
-    if len(sys.argv) < 2:
-        print("Usage: python report_plots.py path_to_pickle_file [output_directory]")
-        sys.exit(1)
+    # # Parse command line arguments
+    # if len(sys.argv) < 2:
+    #     print("Usage: python report_plots.py path_to_pickle_file [output_directory]")
+    #     sys.exit(1)
 
-    pkl_file_path = sys.argv[1]
-    output_dir = sys.argv[2] if len(sys.argv) > 2 else 'figures'
+    # pkl_file_path = sys.argv[1]
+    # output_dir = sys.argv[2] if len(sys.argv) > 2 else 'figures'
+
+    pkl_file_path = "/Users/neel/Library/CloudStorage/OneDrive-Personal/Neel/5_Graduate/08 - Spring 2025/INTA 8803 - Space Sustainability/zzzFinalProject/climate-leocap/scenario-properties-baseline.pkl"
+    output_dir = "/Users/neel/Library/CloudStorage/OneDrive-Personal/Neel/5_Graduate/08 - Spring 2025/INTA 8803 - Space Sustainability/zzzFinalProject/climate-leocap/zzzPlots"
     
     # Load the scenario properties
     scenario_props = load_scenario_properties(pkl_file_path)
     timestamps = scenario_props.output.t
     date_array = extract_dates(scenario_props)
+
+    Plots_plotter = Plots(scenario_props, ['total_objects_by_species_group', 'total_objects_over_time', 'heatmaps_species', 'total_objects_by_species_group', 'indicator_variables'], '../zzzPlots')
 
     # Extract satellite and debris data using the unified function
     # The function returns (indices, names, data), but we only need the data dictionaries
@@ -330,11 +336,11 @@ def main():
 
     # Create heatmaps with contours
     plot_species_heatmap(scenario_props, active_satellite_data, timestamps, date_array, 'S', 
-                        output_dir, density_data=density_data, background_alpha=0.4)
+                        output_dir, density_data=density_data, background_alpha=0.7)
     plot_species_heatmap(scenario_props, rocket_body_satellites, timestamps, date_array, 'B',
-                        output_dir, density_data=density_data, background_alpha=0.4)
+                        output_dir, density_data=density_data, background_alpha=0.7)
     plot_species_heatmap(scenario_props, debris_data, timestamps, date_array, 'debris', 
-                        output_dir, density_data=density_data, background_alpha=0.4)
+                        output_dir, density_data=density_data, background_alpha=0.7)
 
     print(f"All plots have been created and saved to the '{output_dir}' directory.")
 
