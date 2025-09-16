@@ -1,11 +1,12 @@
 from pyssem.pyssem import Model
 from pyssem.pyssem.utils.plotting.plotting import Plots
 import json
+import numpy
 import pickle
 import os
 
 # Load simulation configuration
-with open('pyssem/pyssem/simulation_configurations/example_sim.json') as f:
+with open('simple_sim.json') as f:
     simulation_data = json.load(f)
 
 scenario_props = simulation_data['scenario_properties']
@@ -23,16 +24,19 @@ model = Model(
     density_model=scenario_props["density_model"],
     LC=scenario_props["LC"],
     v_imp=scenario_props["v_imp"],
-    fragment_spreading=False,
-    parallel_processing=False,
-    baseline=False
+    fragment_spreading=scenario_props["fragment_spreading"],
+    baseline=scenario_props["baseline"],
+    launch_scenario=scenario_props["launch_scenario"],
+    indicator_variables=scenario_props["indicator_variables"],
+    SEP_mapping=simulation_data["SEP_mapping"]
 )
+
 
 
 # Run the model
 species = simulation_data["species"]
 species_list = model.configure_species(species)
-results = model.run_model()
+model.run_model()
 
 # Load previous runs
 # with open('out/example_sim/scenario-properties-baseline.pkl', 'rb') as file:
@@ -41,7 +45,7 @@ results = model.run_model()
 # Create the plots - will create a new figures folder in working directory
 try:
     plot_names = simulation_data["plots"]
-    Plots(model.scenario_properties, plot_names)
+    Plots(model.scenario_properties, plot_names, simulation_data['simulation_name'])
 except Exception as e:
     print(e)
     print("No plots specified in the simulation configuration file.")
