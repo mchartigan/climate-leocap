@@ -21,6 +21,8 @@ def main(ssp: int, path: str, plot: bool = False):
 
     # parse the desired SSP from Parker et al. data
     match ssp:
+        case 0:     #
+            sspdata = data[9]
         case 1:
             sspdata = data[1]
         case 2:
@@ -79,4 +81,4 @@ def main(ssp: int, path: str, plot: bool = False):
 
 
 if __name__ == '__main__':
-    main(3, 'pyssem/pyssem/utils/drag/dens_SSP3-70_2000-2100.json')
+    main(0, 'pyssem/pyssem/utils/drag/dens_baseline_2000-2100.json')
