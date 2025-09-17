@@ -6,7 +6,7 @@ import pickle
 import os
 
 # Load simulation configuration
-with open('simple_sim.json') as f:
+with open('sim_config.json') as f:
     simulation_data = json.load(f)
 
 scenario_props = simulation_data['scenario_properties']
@@ -32,7 +32,6 @@ model = Model(
 )
 
 
-
 # Run the model
 species = simulation_data["species"]
 species_list = model.configure_species(species)
@@ -45,7 +44,8 @@ model.run_model()
 # Create the plots - will create a new figures folder in working directory
 try:
     plot_names = simulation_data["plots"]
-    Plots(model.scenario_properties, plot_names, simulation_data['simulation_name'])
+    Plots(model.scenario_properties, plot_names,
+          simulation_data['simulation_name'])
 except Exception as e:
     print(e)
     print("No plots specified in the simulation configuration file.")
